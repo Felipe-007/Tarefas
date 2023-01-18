@@ -18,8 +18,7 @@ export const styles = StyleSheet.create({
   },
   handleLogin: {
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#141414',
+    justifyContent: 'center',    
     height: 45,
     marginBottom: 10,
   },
