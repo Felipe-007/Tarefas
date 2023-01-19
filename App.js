@@ -18,6 +18,15 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [newTask, setNewTask] = useState('');
 
+  function handleDelete(key){  //função deletar, recebendo o key da lista tasks
+    alert(key)
+  }
+
+  //função editar
+  function handleEdit(data){  //pega os dados a lista com o data
+    console.log("Item clicado", data)
+  }
+
   //se nao tiver nada dentro de usuario cairá no IF
   if (!user) {
     return <Login changeStatus={(user) => setUser(user)} /> //quando o changeStatus for chamado em Login, ele passará o user, que será alterado pelo setUser
@@ -42,7 +51,7 @@ export default function App() {
         data={tasks} //recebe a lista
         keyExtractor={(item) => item.key}  //cria um item que recebe o valor da key da lista
         renderItem={({ item }) => (  //as TaskList serão definidas de acordo com o numero de componentes da lista, ou seja passou duas vezes do TaskList
-          <TaskList data={item} />  //o TaskList terá todas as propriedades da lista
+          <TaskList data={item} deleteItem={handleDelete} editItem={handleEdit} />  //o TaskList terá todas as propriedades da lista, deleteItem={handleDelete} recebe a funcao de deletar, passando ela tbem para o components\TaskList
         )}
       />
     </SafeAreaView>
