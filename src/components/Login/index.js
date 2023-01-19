@@ -7,7 +7,7 @@ import { styles } from "./styles";
 
 import firebase from "../../services/firebaseConnection";
 
-export default function Login() {
+export default function Login({ changeStatus }) {  //recebe a propriedade changeStatus de App.js afim de pegar o user e modificar com o setUser
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +18,7 @@ export default function Login() {
       //Aqui fazemos o login
       const user = firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
-        console.log(user.user)             
+        changeStatus(user.user.uid)  //passa os valores recebidos para o changeStatus, que por sua vez modifica o setUser, pegando somente o id do usuario com user.uid           
       })
       .catch((err)=> {
         console.log(err);
@@ -30,7 +30,7 @@ export default function Login() {
       //Aqui cadastramos o usuário
       const user = firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((user) => {
-        console.log(user.user)              
+        changeStatus(user.user.uid)              
       })
       .catch((err)=> {
         console.log(err);

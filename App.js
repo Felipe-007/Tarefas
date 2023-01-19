@@ -12,7 +12,7 @@ export default function App(){
 
   //se nao tiver nada dentro de usuario cairá no IF
   if(!user){
-    return <Login />
+    return <Login changeStatus={ (user) => setUser(user) } /> //quando o changeStatus for chamado em Login, ele passará o user, que será alterado pelo setUser
   }
 
   return(
