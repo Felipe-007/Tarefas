@@ -68,12 +68,16 @@ export default function App() {
   }
 
   function handleDelete(key) {  //função deletar, recebendo o key da lista tasks
-    alert(key)
+    firebase.database().ref('tarefas').child(user).child(key).remove()  //busca no banco a key da tarefa
+      .then(() => {
+        const findTasks = tasks.filter(item => item.key !== key)  //retorna todos os itens, menos aquele que vc clicou
+        setTasks(findTasks)  //agora setTasks tera toda a lista atualizada conforme findTasks
+      })
   }
 
   //função editar
   function handleEdit(data) {  //pega os dados a lista com o data
-    console.log("Item clicado", data)
+    console.log("Item clicado: ", data)
   }
 
   //se nao tiver nada dentro de usuario cairá no IF
