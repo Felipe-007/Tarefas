@@ -1,7 +1,7 @@
 /**
  * 
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, SafeAreaView, TextInput, TouchableOpacity, FlatList, Keyboard } from "react-native";
 import { styles } from "./styles";
 import Login from "./src/components/Login";
@@ -14,6 +14,8 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [tasks, setTasks] = useState('');  //é responsável pelo +
   const [newTask, setNewTask] = useState('');  //é responsável pelo que foi digitado dentro do campo
+  const [key, setKey] = useState('');  // passa a chave da key que será editada, para armazenar quando for alterada function handleEdit
+  const inputRef = useRef(null);
 
 
   //Mostra a lista mesmo apos fechar o app
@@ -48,6 +50,25 @@ export default function App() {
       return;
     }
 
+    //usuário quer editar uma tarefa
+    if (key !== '') {  //se a key que recebe o valor do item clicado for diferente de vazio, cai no if
+      firebase.database().ref('tarefas').child(user).child(key).update({
+        nome: newTask  //o nome passara a ter o valor de newTask que é o valor digitado no campo
+      })
+        .then(() => {
+          const taskIndex = tasks.findIndex((item) => item.key === key) //procura o index conforme o valor que é dado para ele, procura em toda lista onde o item.key é igual a key
+          const taskClone = tasks; //clona toda a lista de tarefas
+          taskClone[taskIndex].nome = newTask  //taskClone[taskIndex].nome é a tarefa que vc quer editar irá receber o valor que tem em newTask, que é a onde o pessoa digitou para alterar
+
+          setTasks([...taskClone])  //passa para setTasks o valor da tarefa atualizada pelo taskClone
+        })
+
+      Keyboard.dismiss();
+      setNewTask('');  //o campo digitado volta a ficar vazio
+      setKey('');  //a key volta a ficar vazia
+      return;  //para aqui, afim de não fazer outra tarefa nova do let tarefas abaixo
+    }
+
     let tarefas = firebase.database().ref('tarefas').child(user);  //cria uma tarefa de acordo com o id unico gerado por user
     let chave = tarefas.push().key;  //cria uma chave unica para cada item ao ser adicionado
 
@@ -77,7 +98,9 @@ export default function App() {
 
   //função editar
   function handleEdit(data) {  //pega os dados a lista com o data
-    console.log("Item clicado: ", data)
+    setKey(data.nome) //tambem ira receber os valores do nome
+    setNewTask(data.nome)  //ao clicar na tarefa, ela irá subir para o campo de preenchimento
+    inputRef.current.focus();  //da foco no teclado 
   }
 
   //se nao tiver nada dentro de usuario cairá no IF
@@ -89,12 +112,13 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <View style={styles.containerTask}>
         <TextInput
-          placeholder="O que vai fazer hoje?"
           style={styles.input}
+          placeholder="O que vai fazer hoje?"
           value={newTask}
-          onChangeText={(texto) => setNewTask(texto)}
+          onChangeText={(text) => setNewTask(text)}
+          ref={inputRef}
         />
-
+        
         <TouchableOpacity style={styles.buttonAdd} onPress={handleAdd}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
