@@ -2,21 +2,43 @@
  * 
  */
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, SafeAreaView, TextInput, TouchableOpacity, FlatList, Keyboard } from "react-native";
 import { styles } from "./styles";
 import Login from "./src/components/Login";
 import TaskList from "./src/components/TaskList";
+import firebase from './src/services/firebaseConnection';
 
-//lista Fictícia
-let tasks = [
-  { key: '1', nome: 'Comprar pão' },
-  { key: '2', nome: 'Comprar leite' },
-]
 
 export default function App() {
 
   const [user, setUser] = useState(null);
-  const [newTask, setNewTask] = useState('');
+  const [tasks, setTasks] = useState('');  //é responsável pelo +
+  const [newTask, setNewTask] = useState('');  //é responsável pelo que foi digitado dentro do campo
+
+  //função adicionar
+  function handleAdd(){
+    if(newTask === ''){
+      return;
+    }
+
+    let tarefas = firebase.database().ref('tarefas').child(user);  //cria uma tarefa de acordo com o id unico gerado por user
+    let chave = tarefas.push().key;  //cria uma chave unica para cada item ao ser adicionado
+
+    tarefas.child(chave).set({  //tarefas receberá o chave unica gerada em let chave
+      nome: newTask  //colocando com o nome a tarefa gerada com o id unico de let chave
+    })
+    .then(() => {  //quando der certo o tarefas.child cai aqui
+      const data = {  //cria o objeto data 
+        key: chave,  //key recebera a chade unica que foi criada para o item
+        nome: newTask  //nome recebe a tabefa que ja foi alterada 
+      };
+
+      setTasks(oldTasks => [...oldTasks, data])  //setTasks recebe as atigas tarefas oldTasks, e todas as antigas tarefas ...oldTasks + a tarefa digitada agora
+    })
+
+    Keyboard.dismiss();  //garante que o teclado ira fechar
+    setNewTask('')  //o campo volta a ficar vazio
+  }
 
   function handleDelete(key){  //função deletar, recebendo o key da lista tasks
     alert(key)
@@ -30,7 +52,7 @@ export default function App() {
   //se nao tiver nada dentro de usuario cairá no IF
   if (!user) {
     return <Login changeStatus={(user) => setUser(user)} /> //quando o changeStatus for chamado em Login, ele passará o user, que será alterado pelo setUser
-  }
+  }  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,7 +64,7 @@ export default function App() {
           onChangeText={(texto) => setNewTask(texto)}
         />
 
-        <TouchableOpacity style={styles.buttonAdd}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={handleAdd}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
