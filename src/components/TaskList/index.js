@@ -11,12 +11,12 @@ export default function TaskList({ data, deleteItem, editItem }) { //data recebe
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.lixeira} onPress={ () => deleteItem(data.key) }>
+      <TouchableOpacity style={styles.lixeira} onPress={() => deleteItem(data.key)}>
         <Entypo name="trash" size={24} color="#FFF" />
       </TouchableOpacity>
 
       <View style={styles.terefa}>
-        <TouchableWithoutFeedback onPress={ () => editItem(data) }>
+        <TouchableWithoutFeedback onPress={() => editItem(data)}>
           <Text style={styles.textTerefa}>{data.nome}</Text>
         </TouchableWithoutFeedback>
       </View>

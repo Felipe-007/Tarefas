@@ -20,4 +20,7 @@ export const styles = StyleSheet.create({
     color: '#FFF',
     paddingRight: 10,
   },
+  body: {
+    padding: 18,
+  },
 })

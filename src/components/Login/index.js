@@ -2,7 +2,7 @@
  * { tipo === 'login' ? 'Acessar' : 'Cadastrar' } se o tipo estiver como login cairá no acessar, se nao vai para o Cadastrar, muda o campo de baixo
  */
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, TextInput, TouchableOpacity, Image } from "react-native";
 import { styles } from "./styles";
 
 import firebase from "../../services/firebaseConnection";
@@ -14,34 +14,44 @@ export default function Login({ changeStatus }) {  //recebe a propriedade change
   const [tipo, setTipo] = useState('login')
 
   function handleLogin() {
-    if(tipo === 'login'){
+    if (tipo === 'login') {
       //Aqui fazemos o login
       const user = firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((user) => {
-        changeStatus(user.user.uid)  //passa os valores recebidos para o changeStatus, que por sua vez modifica o setUser, pegando somente o id do usuario com user.uid           
-      })
-      .catch((err)=> {
-        console.log(err);
-        alert('Parece que algo deu errado');
-        return;
-      })
+        .then((user) => {
+          changeStatus(user.user.uid)  //passa os valores recebidos para o changeStatus, que por sua vez modifica o setUser, pegando somente o id do usuario com user.uid           
+        })
+        .catch((err) => {
+          console.log(err);
+          alert('Parece que algo deu errado');
+          return;
+        })
 
     } else {
       //Aqui cadastramos o usuário
       const user = firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then((user) => {
-        changeStatus(user.user.uid)              
-      })
-      .catch((err)=> {
-        console.log(err);
-        alert('Parece que algo deu errado');
-        return;
-      })
+        .then((user) => {
+          changeStatus(user.user.uid)
+        })
+        .catch((err) => {
+          console.log(err);
+          alert('Parece que algo deu errado');
+          return;
+        })
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <View style={styles.viewImagem}>
+        <Image
+          style={styles.imagem}
+          source={require('../../img/firebase.png')}
+        />
+
+        <Text style={styles.titulo}>Sistema de tarefas</Text>
+      </View>
+
       <TextInput
         placeholder="Seu email"
         style={styles.input}
@@ -54,10 +64,11 @@ export default function Login({ changeStatus }) {  //recebe a propriedade change
         style={styles.input}
         value={password}
         onChangeText={(texto) => setPassword(texto)}
+        secureTextEntry={true}
       />
 
       <TouchableOpacity
-        style={[styles.handleLogin, { backgroundColor: tipo === 'login' ? '#3ea6f2' : '#141414' }]}  //muda a cor do input
+        style={[styles.handleLogin, { backgroundColor: tipo === 'login' ? '#EF4130' : '#61E16E' }]}  //muda a cor do input
         onPress={handleLogin}
       >
         <Text style={styles.loginText}>
@@ -66,7 +77,7 @@ export default function Login({ changeStatus }) {  //recebe a propriedade change
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={ () => setTipo(tipo => tipo === 'login' ? 'cadastrar' : 'login')}  //ao clicar, altera o valor setTipo, alterando tbem o valor do input de cima, se o setTipo for login aparace Cadastrar, se nao Login
+      <TouchableOpacity onPress={() => setTipo(tipo => tipo === 'login' ? 'cadastrar' : 'login')}  //ao clicar, altera o valor setTipo, alterando tbem o valor do input de cima, se o setTipo for login aparace Cadastrar, se nao Login
       >
         <Text style={styles.signText}>
           {tipo === 'login' ? 'Criar uma conta' : 'Login'}

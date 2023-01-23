@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native"
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2f6fc',
+    backgroundColor: '#212121',
     paddingTop: 40,
     paddingHorizontal: 10,
   },
@@ -17,16 +17,36 @@ export const styles = StyleSheet.create({
     borderColor: '#141414',
   },
   handleLogin: {
+    height: 48,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',    
-    height: 45,
-    marginBottom: 10,
+    backgroundColor: '#EF4130',
+    marginTop: 6,
+    borderRadius: 6,
   },
   loginText: {
-    color: '#FFF',
-    fontSize: 17,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF'
   },
   signText: {
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#FFF',
+    marginTop: 10,
+  },
+  viewImagem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imagem: {
+    textAlign: 'center',
+    marginTop: 44,
+  },
+  titulo: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginTop: 30,
+    color: '#FFFFFF',
+    marginBottom: 10,
   },
 })
