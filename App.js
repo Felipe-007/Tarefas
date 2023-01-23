@@ -7,6 +7,7 @@ import { styles } from "./styles";
 import Login from "./src/components/Login";
 import TaskList from "./src/components/TaskList";
 import firebase from './src/services/firebaseConnection';
+import { Feather } from '@expo/vector-icons';
 
 
 export default function App() {
@@ -98,9 +99,16 @@ export default function App() {
 
   //função editar
   function handleEdit(data) {  //pega os dados a lista com o data
-    setKey(data.nome) //tambem ira receber os valores do nome
+    setKey(data.key) //tambem ira receber os valores do nome
     setNewTask(data.nome)  //ao clicar na tarefa, ela irá subir para o campo de preenchimento
     inputRef.current.focus();  //da foco no teclado 
+  }
+
+  //função cancelar a edição
+  function cancelEdit(){
+    setKey('')  //volta a ficar vazio o valor da senha
+    setNewTask('')  //volta a ficar vazio o campo de edição
+    Keyboard.dismiss();  //o teclado fecha
   }
 
   //se nao tiver nada dentro de usuario cairá no IF
@@ -110,6 +118,16 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      { key.length > 0 && (  //toda vez que a key for maior que 0 cairá aqui
+        <View style={styles.viewEditError}>
+          <TouchableOpacity onPress={cancelEdit}>
+            <Feather name="x-circle" size={24} color="#FF0000" />
+          </TouchableOpacity>
+          <Text style={styles.textEditError}>Você esta editando uma tarefa!</Text>
+        </View>
+      )}
+
       <View style={styles.containerTask}>
         <TextInput
           style={styles.input}
@@ -118,7 +136,7 @@ export default function App() {
           onChangeText={(text) => setNewTask(text)}
           ref={inputRef}
         />
-        
+
         <TouchableOpacity style={styles.buttonAdd} onPress={handleAdd}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>

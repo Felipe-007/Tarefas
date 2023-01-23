@@ -34,4 +34,13 @@ export const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 22,
   },
+  viewEditError: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  textEditError: {
+    color: '#FF0000',
+    marginLeft: 5,
+  },
 })
